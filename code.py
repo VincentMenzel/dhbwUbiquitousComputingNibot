@@ -41,7 +41,7 @@ hard_right = False
 
 while True:
 
-    print("begin loop: ", hard_left, left, forward, right, hard_right)
+    print("begin loop: ", int(hard_left), left, forward, right, hard_right)
 
     # Read the sensor Values.
     sensorWerte = sensorAbfrage()
@@ -50,6 +50,8 @@ while True:
     sensorWert_M = sensorWerte[2]
     sensorWert_L = sensorWerte[1]
     sensorWert_LL = sensorWerte[0]
+
+    print('sensorwert: ', sensorWerte)
 
     # Update the movement instructions if any sensor detects the black line
     # If the black line is detected nowhere the robot continues it's current instructions.
@@ -63,8 +65,6 @@ while True:
 
         right = bool(sensorWert_R or sensorWert_RR)
         hard_right = bool(sensorWert_RR)
-
-
 
 
     if left:
@@ -91,5 +91,4 @@ while True:
         motorR(max_speed)
         motorL(max_speed)
 
-
-    print('end loop: ' ,hard_left, left, forward, right, hard_right)
+    print('end   loop: ' ,hard_left, left, forward, right, hard_right)
