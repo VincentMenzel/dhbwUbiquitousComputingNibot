@@ -18,11 +18,11 @@ analog_Pin4 = AnalogIn(board.A3)
 analog_Pin5 = AnalogIn(board.A4)
 
 def is_white(analogWert):
-    grenzwert_Weiss = 300
+    grenzwert_Weiss = 200
     return analogWert > grenzwert_Weiss
 
 def sensor_ADchange(analogWert):
-    return is_white(analogWert) if 0 else 1
+    return 0 if is_white(analogWert) else 1
 
 
 def sensorAbfrage():

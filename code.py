@@ -6,17 +6,20 @@
 # v1.0
 
 # import time
+from oled import clear_display, print_motor_speed, print_movement_instrcution, update_display
 from motor import *
 from sensoren import *
 
 # Ensures that the amount passed in is within the valid boundries of the speed.
 def get_valid_speed(amount): 
     if amount > 0 and amount < 100:
-        return amount
+        return int(amount)
     elif amount < 0:
         return 0
     elif amount > 100:
         return 100
+
+
 
 # Define the max speed of the robot. (0 - 100) 
 max_speed = 25
@@ -67,28 +70,45 @@ while True:
         hard_right = bool(sensorWert_RR)
 
 
-    if left:
-        print("driveLeft")
+    clear_display()
 
+    if left:
+
+        motor_left_speed = 0 if hard_left or not forward else slow_turn_speed 
+        motor_right_speed = max_turn_speeed if hard_left else max_speed
+        
         # Drive turn with max_turn speed if a sharp turn is required
-        motorR(max_turn_speeed if hard_left else max_speed)
+        motorR(motor_right_speed)
 
         # Stop the left motor if a sparp turn is required. 
         # Otherwise only slow the motor to the in the slow turn multiplier defined speed
-        motorL(0 if hard_left or not forward else slow_turn_speed )
+        motorL(motor_left_speed)
+
+        print("drive left", ('l:', motor_left_speed), ('r:', motor_right_speed))
+        print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
+        print_movement_instrcution('slow left' if not hard_left else 'hard left')
 
     elif right: 
-        print("driveRight")
+
+        motor_left_speed = max_turn_speeed if hard_right else max_speed
+        motor_right_speed = 0 if hard_right or not forward else slow_turn_speed
+
         # Drive turn with max_turn speed if a sharp turn is required
-        motorR(0 if hard_right or not forward else slow_turn_speed)
+        motorR(motor_right_speed)
 
         # Stop the right motor if a sparp turn is required. 
         # Otherwise only slow the motor to the in the slow turn multiplier defined speed
-        motorL(max_turn_speeed if hard_right else max_speed)
+        motorL(motor_left_speed)
 
+        print("drive right", ('l:', motor_left_speed), ('r:', motor_right_speed))
+        print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
+        print_movement_instrcution('slow right' if not hard_right else 'hard right')
     else:
-        print("driveForward")
         motorR(max_speed)
         motorL(max_speed)
+        print("drive forward",('l:', max_speed), ('r:', max_speed) )
+        print_motor_speed(speed_r=max_speed, speed_l=max_speed)
+        print_movement_instrcution('forward')
 
+    update_display()
     print('end   loop: ' ,hard_left, left, forward, right, hard_right)
