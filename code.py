@@ -86,7 +86,7 @@ while True:
 
         print("drive left", ('l:', motor_left_speed), ('r:', motor_right_speed))
         print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
-        print_movement_instrcution('slow left' if not hard_left else 'hard left')
+        print_movement_instrcution('left' if not hard_left else 'hard left')
 
     elif right: 
 
@@ -102,7 +102,7 @@ while True:
 
         print("drive right", ('l:', motor_left_speed), ('r:', motor_right_speed))
         print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
-        print_movement_instrcution('slow right' if not hard_right else 'hard right')
+        print_movement_instrcution('right' if not hard_right else 'hard right')
     else:
         motorR(max_speed)
         motorL(max_speed)
