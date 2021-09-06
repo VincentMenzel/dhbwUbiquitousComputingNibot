@@ -4,7 +4,7 @@ Repository für das Projekt "Nibot - Fahrenden Roboter entwickeln"
 
 DHBW Heidenheim
 :--------------:
-![DHBW Logo](logo/dhbw.svg)
+![DHBW Logo](screenshots/logo/dhbw.svg)
 
 <h1 align="center">
   Roboter entwickeln
