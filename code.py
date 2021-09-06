@@ -20,7 +20,6 @@ def get_valid_speed(amount):
         return 100
 
 
-
 # Define the max speed of the robot. (0 - 100) 
 max_speed = 25
 
@@ -41,74 +40,80 @@ hard_left = False
 right = False
 hard_right = False
 
+# Current Movement Speed Instructions
+motor_left_speed = max_speed
+motor_right_speed = max_speed
+direction = 'forward'
+
+
+def update_display():
+    global motor_right_speed
+    global motor_left_speed 
+    global direction
+    clear_display()
+
+    # Update the displayed motor speed and movement instruction
+    print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
+    print_movement_instrcution(direction)
+
+    update_display()
 
 while True:
 
     print("begin loop: ", int(hard_left), left, forward, right, hard_right)
 
     # Read the sensor Values.
-    sensorWerte = sensorAbfrage()
-    sensorWert_RR = sensorWerte[4]
-    sensorWert_R = sensorWerte[3]
-    sensorWert_M = sensorWerte[2]
-    sensorWert_L = sensorWerte[1]
-    sensorWert_LL = sensorWerte[0]
+    sensor_values = sensorAbfrage()
+    sensor_value_rr = sensor_values[4]
+    sensor_value_r= sensor_values[3]
+    sensor_value_m = sensor_values[2]
+    sensor_value_l = sensor_values[1]
+    sensor_value_ll = sensor_values[0]
 
-    print('sensorwert: ', sensorWerte)
+    print('sensorwert: ', sensor_values)
 
     # Update the movement instructions if any sensor detects the black line
     # If the black line is detected nowhere the robot continues it's current instructions.
-    if 1 in sensorWerte:
+    if 1 in sensor_values:
 
-        print('updated movement instructions')
-        forward = bool(sensorWert_M)
+        print('updateing movement instructions')
+        forward = bool(sensor_value_m)
 
-        left  = bool(sensorWert_L or sensorWert_LL)
-        hard_left = bool(sensorWert_LL)
+        left  = bool(sensor_value_l or sensor_value_ll)
+        hard_left = bool(sensor_value_ll)
 
-        right = bool(sensorWert_R or sensorWert_RR)
-        hard_right = bool(sensorWert_RR)
+        right = bool(sensor_value_r or sensor_value_rr)
+        hard_right = bool(sensor_value_rr)
 
 
-    clear_display()
+        # Find the correct speed according to the current sensor values
+        if left:
 
-    if left:
+            motor_left_speed = 0 if hard_left or not forward else slow_turn_speed 
+            motor_right_speed = max_turn_speeed if hard_left else max_speed
 
-        motor_left_speed = 0 if hard_left or not forward else slow_turn_speed 
-        motor_right_speed = max_turn_speeed if hard_left else max_speed
-        
-        # Drive turn with max_turn speed if a sharp turn is required
+            direction = 'left' if not hard_left else 'hard left'
+
+        elif right: 
+
+            motor_left_speed = max_turn_speeed if hard_right else max_speed
+            motor_right_speed = 0 if hard_right or not forward else slow_turn_speed
+
+            direction = 'right' if not hard_right else 'hard right'
+
+        else:
+
+            motor_left_speed = max_speed
+            motor_right_speed = max_speed
+
+            direction = 'forward'
+
+
+        # Update Right and Left Motor Speed.
         motorR(motor_right_speed)
-
-        # Stop the left motor if a sparp turn is required. 
-        # Otherwise only slow the motor to the in the slow turn multiplier defined speed
         motorL(motor_left_speed)
 
-        print("drive left", ('l:', motor_left_speed), ('r:', motor_right_speed))
-        print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
-        print_movement_instrcution('left' if not hard_left else 'hard left')
-
-    elif right: 
-
-        motor_left_speed = max_turn_speeed if hard_right else max_speed
-        motor_right_speed = 0 if hard_right or not forward else slow_turn_speed
-
-        # Drive turn with max_turn speed if a sharp turn is required
-        motorR(motor_right_speed)
-
-        # Stop the right motor if a sparp turn is required. 
-        # Otherwise only slow the motor to the in the slow turn multiplier defined speed
-        motorL(motor_left_speed)
-
-        print("drive right", ('l:', motor_left_speed), ('r:', motor_right_speed))
-        print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
-        print_movement_instrcution('right' if not hard_right else 'hard right')
-    else:
-        motorR(max_speed)
-        motorL(max_speed)
-        print("drive forward",('l:', max_speed), ('r:', max_speed) )
-        print_motor_speed(speed_r=max_speed, speed_l=max_speed)
-        print_movement_instrcution('forward')
 
     update_display()
+
     print('end   loop: ' ,hard_left, left, forward, right, hard_right)
