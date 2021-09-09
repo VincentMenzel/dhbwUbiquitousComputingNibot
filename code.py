@@ -6,7 +6,7 @@
 # v1.0
 
 # import time
-from oled import clear_display, print_motor_speed, print_movement_instrcution, update_display
+from oled import clear_display, print_countdown, print_motor_speed, print_movement_instrcution, update_display
 from motor import *
 from sensoren import *
 
@@ -57,6 +57,19 @@ def update_display():
     print_movement_instrcution(direction)
 
     update_display()
+
+def play_start_countdown():
+    delay = 2
+    time.sleep(delay, 0)
+    print_countdown(3)
+    time.sleep(delay, 5)
+    print_countdown(2)
+    time.sleep(delay)
+    print_countdown(1, 10)
+    time.sleep(delay)
+    print_countdown('Start!', 15)
+
+play_start_countdown()
 
 while True:
 
