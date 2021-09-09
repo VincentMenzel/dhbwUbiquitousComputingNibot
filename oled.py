@@ -28,6 +28,27 @@ def update_display():
 def clear_display():
     oled.fill(0)
 
+def print_countdown(countdown_text, offset):
+    clear_display()
+
+    for i in range(width - offset):
+        oled.pixel(i, offset, 1)
+        oled.pixel(i, height - 1 - offset, 1)
+
+
+    for i in range(height - offset):
+        oled.pixel(offset, i, 1)
+        oled.pixel(width - 1 - offset, i, 1)
+
+    print_height = height / 2 - 5
+
+    if type(countdown_text) == str:
+        oled.text(countdown_text, width/2-(len(countdown_text)*4))
+    else:
+        oled.text(countdown_text, width / 2, print_height)
+
+    update_display()
+
 def print_movement_instrcution(direction):
     oled.text(direction, 0, 0, 1)
 
