@@ -1,4 +1,5 @@
 debug = 0
+play_radio = 0
 # Liniensensor - Robo - Test
 # Adafruit CircuitPython 6.2.0
 # Board: Metro M4 Express
@@ -7,7 +8,7 @@ debug = 0
 # v1.0
 
 # import time
-from oled import clear_display, print_countdown, print_motor_speed, print_movement_instrcution, update_display
+from oled import clear_display, print_countdown, print_motor_speed, print_movement_instruction, update_display
 from motor import *
 from sensoren import *
 
@@ -56,7 +57,7 @@ def update_display_values():
 
     # Update the displayed motor speed and movement instruction
     print_motor_speed(speed_r=motor_right_speed, speed_l=motor_left_speed)
-    print_movement_instrcution(direction)
+    print_movement_instruction(direction)
 
     update_display()
 
@@ -131,6 +132,6 @@ while True:
         motorL(motor_left_speed)
 
 
-    #update_display_values()
+    if play_radio: update_display_values()
 
     #print('end   loop: ' ,hard_left, left, forward, right, hard_right)

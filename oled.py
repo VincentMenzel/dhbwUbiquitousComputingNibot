@@ -21,8 +21,8 @@ def show_default():
     oled.text('Hello World!',0,0,1)
     update_display()
 
-def update_display():
-    update_rick()
+def update_display(no_rick=False):
+    if not no_rick: update_rick()
     oled.show()
 
 def clear_display():
@@ -31,14 +31,14 @@ def clear_display():
 def print_countdown(countdown_text, offset):
     clear_display()
 
-    for i in range(width - offset):
-        oled.pixel(i, offset, 1)
-        oled.pixel(i, height - 1 - offset, 1)
+    for i in range(width - offset * 2):
+        oled.pixel(i + offset, offset, 1)
+        oled.pixel(i + offset, height - 1 - offset, 1)
 
 
-    for i in range(height - offset):
-        oled.pixel(offset, i, 1)
-        oled.pixel(width - 1 - offset, i, 1)
+    for i in range(height - offset * 2):
+        oled.pixel(offset, i + offset, 1)
+        oled.pixel(width - 1 - offset, i + offset, 1)
 
     print_height = int(height / 2 - 5)
 
@@ -49,7 +49,7 @@ def print_countdown(countdown_text, offset):
 
     update_display()
 
-def print_movement_instrcution(direction):
+def print_movement_instruction(direction):
     oled.text(direction, 0, 0, 1)
 
 def print_motor_speed(speed_r, speed_l):
