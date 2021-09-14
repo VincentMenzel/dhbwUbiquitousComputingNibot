@@ -41,4 +41,6 @@ def sensorAbfrage():
 
     sensorWerte = [sensorWert_1D, sensorWert_2D, sensorWert_3D, sensorWert_4D, sensorWert_5D]
 
+    #print(SensorDaten1, SensorDaten2, SensorDaten3, SensorDaten4, SensorDaten5)
+    
     return sensorWerte

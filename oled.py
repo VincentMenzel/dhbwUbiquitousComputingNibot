@@ -40,12 +40,12 @@ def print_countdown(countdown_text, offset):
         oled.pixel(offset, i, 1)
         oled.pixel(width - 1 - offset, i, 1)
 
-    print_height = height / 2 - 5
+    print_height = int(height / 2 - 5)
 
-    if type(countdown_text) == str:
-        oled.text(countdown_text, width/2-(len(countdown_text)*4))
+    if isinstance(countdown_text, str):
+        oled.text(countdown_text, int(width/2-(len(countdown_text)*4)), print_height, 1)
     else:
-        oled.text(countdown_text, width / 2, print_height)
+        oled.text(countdown_text, int(width / 2), print_height, 1)
 
     update_display()
 
@@ -60,8 +60,8 @@ def update_rick():
     global last_updated_rick_at
     global word
 
-    oled.text("Playing: 'Rick Roll'", 0,40,1)
-    oled.text(" ".join(rick_roll[word % len(rick_roll):word+3 % len(rick_roll)]), 0, 40, 1)
+    oled.text("Playing: 'Rick Roll'", 0,35,1)
+    oled.text(" ".join(rick_roll[word % len(rick_roll):word+3 % len(rick_roll)]), 0, 45, 1)
 
     if int(time.time() - last_updated_rick_at >= 2):
         last_updated_rick_at = int(time.time())

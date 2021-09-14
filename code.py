@@ -1,4 +1,5 @@
-# Liniensensor - Robo - Test 1
+debug = 0
+# Liniensensor - Robo - Test
 # Adafruit CircuitPython 6.2.0
 # Board: Metro M4 Express
 # Sensoren: Waveshare Tracker Sensor (5x Analog)
@@ -24,10 +25,11 @@ def get_valid_speed(amount):
 max_speed = 25
 
 # Define the hard turn multilplier when driving a sharp turn. 
-hard_turn_multiplier = 1.25
+hard_turn_multiplier = 2.
+hard_turn_breaking = -15
 
 # Define the slow turn multilplier when driving a soft turn. 
-slow_turn_multiplier = .5
+slow_turn_multiplier = .7
 
 # Calculate sharp turn speed.
 max_turn_speeed = get_valid_speed(max_speed * hard_turn_multiplier)
@@ -46,7 +48,7 @@ motor_right_speed = max_speed
 direction = 'forward'
 
 
-def update_display():
+def update_display_values():
     global motor_right_speed
     global motor_left_speed 
     global direction
@@ -60,20 +62,21 @@ def update_display():
 
 def play_start_countdown():
     delay = 2
-    time.sleep(delay, 0)
-    print_countdown(3)
-    time.sleep(delay, 5)
-    print_countdown(2)
     time.sleep(delay)
-    print_countdown(1, 10)
+    print_countdown("3", 0)
+    time.sleep(delay)
+    print_countdown("2", 5)
+    time.sleep(delay)
+    print_countdown("1", 10)
     time.sleep(delay)
     print_countdown('Start!', 15)
 
-play_start_countdown()
+#play_start_countdown()
 
 while True:
 
-    print("begin loop: ", int(hard_left), left, forward, right, hard_right)
+    if debug: print("begin loop: ", 'hard left' if hard_left else 0, 'left' if left else 0, 'forward' if forward else 0, 'right' if right else 0, 'hard right' if hard_right else 0)
+    #time.sleep(1)
 
     # Read the sensor Values.
     sensor_values = sensorAbfrage()
@@ -83,13 +86,13 @@ while True:
     sensor_value_l = sensor_values[1]
     sensor_value_ll = sensor_values[0]
 
-    print('sensorwert: ', sensor_values)
+    if debug: print('sensorwert: ', sensor_values)
 
     # Update the movement instructions if any sensor detects the black line
     # If the black line is detected nowhere the robot continues it's current instructions.
-    if 1 in sensor_values:
+    if 1 in sensor_values and 0 in sensor_values:
 
-        print('updateing movement instructions')
+        if debug: print('updateing movement instructions')
         forward = bool(sensor_value_m)
 
         left  = bool(sensor_value_l or sensor_value_ll)
@@ -100,17 +103,18 @@ while True:
 
 
         # Find the correct speed according to the current sensor values
-        if left:
+        if left and not right and not hard_right:
+       
 
-            motor_left_speed = 0 if hard_left or not forward else slow_turn_speed 
+            motor_left_speed = hard_turn_breaking if hard_left or not forward else slow_turn_speed 
             motor_right_speed = max_turn_speeed if hard_left else max_speed
 
             direction = 'left' if not hard_left else 'hard left'
 
-        elif right: 
+        elif right and not left and not hard_left: 
 
             motor_left_speed = max_turn_speeed if hard_right else max_speed
-            motor_right_speed = 0 if hard_right or not forward else slow_turn_speed
+            motor_right_speed = hard_turn_breaking if hard_right or not forward else slow_turn_speed
 
             direction = 'right' if not hard_right else 'hard right'
 
@@ -127,6 +131,6 @@ while True:
         motorL(motor_left_speed)
 
 
-    update_display()
+    #update_display_values()
 
-    print('end   loop: ' ,hard_left, left, forward, right, hard_right)
+    #print('end   loop: ' ,hard_left, left, forward, right, hard_right)
