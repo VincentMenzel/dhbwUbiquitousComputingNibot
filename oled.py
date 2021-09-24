@@ -47,7 +47,7 @@ def print_countdown(countdown_text, offset):
     else:
         oled.text(countdown_text, int(width / 2), print_height, 1)
 
-    update_display()
+    update_display(no_rick = True)
 
 def print_movement_instruction(direction):
     oled.text(direction, 0, 0, 1)

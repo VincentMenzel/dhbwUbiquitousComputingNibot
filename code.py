@@ -1,5 +1,7 @@
 debug = 0
 play_radio = 0
+
+
 # Liniensensor - Robo - Test
 # Adafruit CircuitPython 6.2.0
 # Board: Metro M4 Express
@@ -26,11 +28,11 @@ def get_valid_speed(amount):
 max_speed = 25
 
 # Define the hard turn multilplier when driving a sharp turn. 
-hard_turn_multiplier = 2.
-hard_turn_breaking = -15
+hard_turn_multiplier = 3.
+hard_turn_breaking = -25
 
 # Define the slow turn multilplier when driving a soft turn. 
-slow_turn_multiplier = .7
+slow_turn_multiplier = .4
 
 # Calculate sharp turn speed.
 max_turn_speeed = get_valid_speed(max_speed * hard_turn_multiplier)
@@ -72,7 +74,7 @@ def play_start_countdown():
     time.sleep(delay)
     print_countdown('Start!', 15)
 
-#play_start_countdown()
+play_start_countdown()
 
 while True:
 
