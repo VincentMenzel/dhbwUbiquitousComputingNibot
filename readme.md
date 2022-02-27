@@ -30,8 +30,9 @@ DHBW Heidenheim
 </p>
 
 
-
-
+| Poster | Schaltplan | Team Nibot |
+|:---:|:---:|:---:|
+| [![Poster](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/Poster.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/Poster.pdf)  | [![Schaltplan](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/Schaltplan.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/Schaltplan.pdf) | [![Team Nibot](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/TeamNibot.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/TeamNibot.pdf) |
 
 <p>
 Bearbeitungszeitraum: 11 Wochen </br>
