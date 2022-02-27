@@ -30,13 +30,14 @@ DHBW Heidenheim
 </p>
 
 
-| Poster | Schaltplan | Team Nibot |
-|:---:|:---:|:---:|
-| [![Poster](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/Poster.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/Poster.pdf)  | [![Schaltplan](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/Schaltplan.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/Schaltplan.pdf) | [![Team Nibot](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/TeamNibot.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/TeamNibot.pdf) |
-
 <p>
 Bearbeitungszeitraum: 11 Wochen </br>
 Vorgelegt von: Vincent Menzel, Marius Lindt, Enrico Bachus </br>
 Matrikelnummer; Kurs: 5855524, 5446728, 7605326; WWI19A </br>
 Gutachter der Dualen Hochschule: Herr Beckers </br>
 </p>
+
+
+| Poster | Schaltplan | Team Nibot |
+|:---:|:---:|:---:|
+| [![Poster](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/Poster.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/Poster.pdf)  | [![Schaltplan](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/Schaltplan.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/Schaltplan.pdf) | [![Team Nibot](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/assets/TeamNibot.png)](https://raw.githubusercontent.com/vincentmenzel/dhbwUbiquitousComputingNibot/main/doc/TeamNibot.pdf) |
