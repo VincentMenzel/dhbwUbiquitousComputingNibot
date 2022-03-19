@@ -21,7 +21,7 @@ def show_default():
     oled.text('Hello World!',0,0,1)
     update_display()
 
-def update_display(no_rick=False):
+def update_display(no_rick=True):
     if not no_rick: update_rick()
     oled.show()
 

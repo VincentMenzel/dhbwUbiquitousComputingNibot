@@ -20,24 +20,28 @@ class NiBot:
         self.sensor_value_ll = self.sensor_values[0]
 
     # Define the max speed of the robot. (0 - 100)
-    max_speed = 23
+    max_speed = 18
 
     # Define the hard turn multilplier when driving a sharp turn.
-    hard_turn_multiplier = 1.25
     hard_turn_breaking = 0
 
-    # Define the slow turn multilplier when driving a soft turn.
-    slow_turn_multiplier = .4
+    # Define the medium turn multiplier when driving - for the wheel on the side which is pointing towards the direction the vehicle should be driving to
+    medium_multiplier = 0.8
+
+    # Define the slow turn multilplier when driving a soft turn - for the wheel on the side which is pointing towards the direction the vehicle should be driving to
+    slow_turn_multiplier = 0.4
 
     # Calculate sharp turn speed.
-    max_turn_speeed = get_valid_speed(max_speed * hard_turn_multiplier)
-    slow_turn_speed = get_valid_speed(slow_turn_multiplier * max_speed)
+    medium_turn_speed = get_valid_speed(max_speed * medium_multiplier)
+    slow_turn_speed = get_valid_speed(max_speed * slow_turn_multiplier)
 
     # Default instructions for movement.
     forward = True
     left = False
+    medium_left = False
     hard_left = False
     right = False
+    medium_right = False
     hard_right = False
 
     # Current Movement Speed Instructions
@@ -51,6 +55,9 @@ class NiBot:
 
     hole_attempt_phase = 0
     hole_attempt_turn_lost_sight = False
+
+    #junktion right turn until left sensors are white
+    junktion_attempt_lost_black = False
 
     # Play Countdown
     delay = 2
@@ -94,14 +101,18 @@ class NiBot:
         motorR(self.motor_right_speed)
 
     def turn_left(self):
-        self.left_motor(self.hard_turn_breaking if self.hard_left or not self.forward else self.slow_turn_speed)
-        self.right_motor(self.max_turn_speeed if self.hard_left else self.max_speed)
-        self.direction = 'left' if not self.hard_left else 'hard left'
+        self.left_motor(self.slow_turn_speed if self.medium_left else self.medium_turn_speed if self.left else self.hard_turn_breaking)
+        self.right_motor(self.max_speed)
+        self.direction = 'left' if self.left else ('medium left' if self.medium_left else 'hard left')
 
     def turn_right(self):
-        self.left_motor(self.max_turn_speeed if self.hard_right else self.max_speed)
-        self.right_motor(self.hard_turn_breaking if self.hard_right or not self.forward else self.slow_turn_speed)
-        self.direction = 'right' if not self.hard_right else 'hard right'
+        self.left_motor(self.max_speed)
+        self.right_motor(self.slow_turn_speed if self.medium_right else self.medium_turn_speed if self.right else self.hard_turn_breaking)
+        self.direction = 'right' if self.right else ('medium right' if self.medium_right else 'hard right')
+
+    def rotate_left(self):
+        self.left_motor(-self.max_speed)
+        self.right_motor(self.max_speed)
 
     def stop(self):
         self.left_motor(0)
@@ -123,7 +134,15 @@ class NiBot:
             self.junction_attempt_start = time.time()
             self.hole_attempt_start = False
             self.drive_attempt_start = False
-
+            self.junktion_attempt_lost_black = False
+        if not self.sensor_value_ll:
+            self.junktion_attempt_lost_black = True
+        self.turn_right()
+        
+    def drive_half_junction_l(self):
+        self.turn_left()
+    
+    def drive_half_junction_r(self):
         self.turn_right()
 
     def drive_hole(self):
@@ -143,24 +162,24 @@ class NiBot:
         # Drive forward 2s
         if self.hole_attempt_phase == 0:
             self.drive_forward()
-            if since_start >= 0.5:
+            if since_start >= 2.0:
                 self.hole_attempt_start = time.time()
                 self.hole_attempt_phase = 1
                 self.stop()
         # Break
         elif self.hole_attempt_phase == 1:
-            if since_start >= 0.5:
+            if since_start >= 2.0:
                 self.hole_attempt_start = time.time()
                 self.hole_attempt_phase = 2
                 self.drive_backward()
 
         # Drive Backward 2s
         elif self.hole_attempt_phase == 2:
-            if since_start >= 5: #or 1 in self.sensor_values:
+            if since_start >= 1: #or 1 in self.sensor_values:
                 self.hole_attempt_start = time.time()
                 self.hole_attempt_phase = 3
                 self.hole_attempt_turn_lost_sight = False
-                self.turn_left()
+                self.rotate_left()
 
         # Turn around
         elif self.hole_attempt_phase == 3:            
@@ -179,26 +198,30 @@ class NiBot:
 
             self.print('updateing movement instructions')
 
-            self.forward = bool(self.sensor_value_m)
+            self.forward = bool(self.sensor_value_m and not self.sensor_value_l and not self.sensor_value_ll and not self.sensor_value_r and not self.sensor_value_rr or self.sensor_value_m and self.sensor_value_l and not self.sensor_value_ll and self.sensor_value_r and not self.sensor_value_rr)
 
-            self.left = bool(self.sensor_value_l or self.sensor_value_ll)
-            self.hard_left = bool(self.sensor_value_ll)
+            self.left = bool(self.sensor_value_l and not self.sensor_value_ll and not self.sensor_value_r)
+            self.medium_left = bool(self.sensor_value_l and self.sensor_value_ll and not self.sensor_value_m and not self.sensor_value_r and not self.sensor_value_rr)
+            self.hard_left = bool(self.sensor_value_ll and not self.sensor_value_l or self.sensor_value_ll and self.sensor_value_l and self.sensor_value_m)
 
-            self.right = bool(self.sensor_value_r or self.sensor_value_rr)
-            self.hard_right = bool(self.sensor_value_rr)
+            self.right = bool(self.sensor_value_r and not self.sensor_value_rr and not self.sensor_value_l)
+            self.medium_right = bool(self.sensor_value_r and self.sensor_value_rr and not self.sensor_value_l and not self.sensor_value_ll)
+            self.hard_right = bool(self.sensor_value_rr and not self.sensor_value_r)
             self.print(
-                "begin loop: ",
+                "begin loop: "
                 'hard left' if self.hard_left else 0,
+                'medium left' if self.medium_left else 0,
                 'left' if self.left else 0,
                 'forward' if self.forward else 0,
                 'right' if self.right else 0,
+                'medium right' if self.medium_right else 0,
                 'hard right' if self.hard_right else 0
             )
             # Find the correct speed according to the current sensor values
-            if self.left and not self.right and not self.hard_right:
+            if self.left or self.medium_left or self.hard_left:
                 self.turn_left()
 
-            elif self.right and not self.left and not self.hard_left:
+            elif self.right or self.medium_right or self.hard_right:
                 self.turn_right()
 
             else:
@@ -223,12 +246,19 @@ class NiBot:
 
         # Detect
         detect_junction = 0 not in self.sensor_values
+        detect_half_junction_l = bool(self.sensor_value_l and self.sensor_value_ll and self.sensor_value_m)
+        detect_half_junction_r = bool(self.sensor_value_r and self.sensor_value_rr and self.sensor_value_m)
         detect_hole = 1 not in self.sensor_values
-        detect_follow = 1 in self.sensor_values
+        detect_follow = 1 in self.sensor_values and 0 in self.sensor_values
 
         self.print("detect_junction", detect_junction)
+        self.print("detect_half_junction_l", detect_half_junction_l)
+        self.print("detect_half_junction_r", detect_half_junction_r)
         self.print("detect_hole", detect_hole)
         self.print("detect_follow", detect_follow)
+        if self.junction_attempt_start and not self.junktion_attempt_lost_black:
+            self.drive_junction()
+            return
         if not self.hole_attempt_phase == 3:
             if detect_follow:
                 self.drive_follow()
@@ -236,12 +266,18 @@ class NiBot:
             if detect_junction:
                 self.drive_junction()
 
+            if detect_half_junction_l:
+                self.drive_half_junction_l()
+            
+            if detect_half_junction_r:
+                self.drive_half_junction_r()
+
         if detect_hole or self.hole_attempt_phase == 3:
             self.drive_hole()
 
 
 def main():
-  robot = NiBot(True, True)
+  robot = NiBot(False, False)
   robot.play_start_countdown()
 
   while True:

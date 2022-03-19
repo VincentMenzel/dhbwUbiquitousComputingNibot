@@ -18,10 +18,12 @@ MotorLB_In1.duty_cycle = 0  # zwischen 0 und 65535
 def get_valid_speed(amount):
     if amount >= 0 and amount <= 100:
         return int(amount)
-    elif amount < 0:
-        return 0
+    elif amount < 0 and amount >= -100:
+        return int(amount)
     elif amount > 100:
         return 100
+    elif amount < -100:
+        return -100
 
 
 def motorL(target_speed):  # linker Motor (Geschwindigkeit [0-100])
