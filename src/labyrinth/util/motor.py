@@ -16,9 +16,9 @@ MotorLB_In1.duty_cycle = 0  # zwischen 0 und 65535
 
 # Ensures that the amount passed in is within the valid boundries of the speed.
 def get_valid_speed(amount):
-    if amount >= 0 and amount <= 100:
+    if 0 <= amount <= 100:
         return int(amount)
-    elif amount < 0 and amount >= -100:
+    elif 0 > amount >= -100:
         return int(amount)
     elif amount > 100:
         return 100
